@@ -5,13 +5,15 @@ const cookieSession = require("cookie-session");
 const dbConfig = require("./app/config/db.config");
 const auth = require("./app/routes/auth.routes");
 const user = require("./app/routes/user.routes");
+const car = require("./app/routes/car.routes");
+const city = require("./app/routes/city.routes");
+
 const db = require("./app/models");
-const Role = db.role;
 
 const app = express();
 
 var corsOptions = {
-  origin: "http://localhost:4000",
+  origin: "http://localhost:3000",
 };
 
 app.use(function (req, res, next) {
@@ -52,6 +54,8 @@ db.mongoose
 // simple route
 app.use("/auth", auth);
 app.use("/user", user);
+app.use("/car", car);
+app.use("/city", city);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {

@@ -1,6 +1,7 @@
 const { verifySignUp, authJwt } = require("../middlewares");
 const {
   createUser,
+  getUser,
   udpateUser,
   deleteUser,
 } = require("../controllers/user.controller");
@@ -17,6 +18,9 @@ router.post(
   ],
   createUser
 );
+
+router.get("/", [authJwt.verifyToken, authJwt.isManager], getUser);
+router.get("/:id", authJwt.verifyToken, getUser);
 
 router.patch("/:id", [authJwt.verifyToken, authJwt.isManager], udpateUser);
 

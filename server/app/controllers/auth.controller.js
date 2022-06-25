@@ -7,6 +7,12 @@ var jwt = require("jsonwebtoken");
 
 exports.signin = (req, res) => {
   const { email, password } = req.body;
+  if (!email || !password) {
+    res.status(400).send({
+      message: "Email and password is required",
+    });
+    return;
+  }
   User.findOne({
     email,
   })

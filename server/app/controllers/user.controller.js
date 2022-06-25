@@ -34,21 +34,67 @@ exports.createUser = (req, res) => {
 
         return res.send({
           message: "User was registered successfully!",
-          user,
+          data: user,
         });
       });
     });
   });
 };
 
-exports.udpateUser = async (req, res) => {
+exports.getUser = (req, res) => {
   const { id } = req.params;
-  try {
-    const user = await User.findByIdAndUpdate(id, req.body, { new: true });
-    res.status(202).send(user);
-  } catch (err) {
-    res.status(304).send({ message: "Updated failed" });
+  if (id) {
+    User.findById(id)
+      .populate("role", "-__v")
+      .exec((err, user) => {
+        if (err) {
+          res.status(500).send({ message: "Error happen", error: err });
+          return;
+        }
+        if (!user) {
+          res.status(404).send({ message: "User not found" });
+          return;
+        }
+
+        if (res) {
+          res.status(200).send({ data: user });
+          return;
+        }
+
+        res.status(505).send({ message: "Something went wrong." });
+      });
+    return;
   }
+
+  User.find()
+    .populate("role", "-__v")
+    .exec((err, users) => {
+      if (err) {
+        res.status(500).send({ message: "getting failed" });
+        return;
+      }
+      if (users) {
+        res.status(200).send({ data: users });
+        return;
+      }
+      res.status(505).send({ message: "Something went wrong." });
+    });
+};
+
+exports.udpateUser = (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    res.status(404).send({ message: "id not found" });
+    return;
+  }
+
+  User.findByIdAndUpdate(id, req.body, { new: true }).exec((err, user) => {
+    if (err) {
+      res.status(304).send({ message: "Updated failed" });
+      return;
+    }
+    res.status(202).send({ data: user });
+  });
 };
 
 exports.deleteUser = (req, res) => {
