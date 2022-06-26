@@ -1,10 +1,9 @@
-import logo from "./logo.webp";
-import "./App.css";
+import "./App.scss";
 
 function App() {
   return (
     <div className="App">
-      <img src={logo} />
+      <h1>Hey i am h1</h1>
     </div>
   );
 }

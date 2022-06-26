@@ -1,0 +1,15 @@
+:root {
+  --behind: -1;
+  --default: 0;
+  --image-overlay: 1;
+  --z-index-3: 3;
+  --header: 5;
+  --header-menu-overlay: 6;
+  --popup: 8;
+  --edition: 10;
+  --loader: 100;
+  --search-filter-popup: 101;
+  --header-overlay: 1000; //header has a z-index of 999
+  --over-the-top: 9999;
+  --top-overlay: 10000;
+}

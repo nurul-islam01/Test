@@ -1,0 +1,76 @@
+// http://chir.ag/projects/name-that-color/#2F81CD
+:root {
+  --rgbBlack: 0, 0, 0;
+  --rgbWhite: 255, 255, 255;
+  --greyish-brown: #404040;
+  --white: #ffffff;
+  --black: #121212;
+  --multisite-hover: #fff6;
+  --orange: #ffb300;
+  --very-light-pink: #e2e2e2;
+  --gray: #929292;
+  --wild-sand: #f4f4f4;
+  --scorpion: #575757;
+  --silver: #bebebe;
+  --mercury: #e9e9e9;
+  --alto: #e0e0e0;
+  --emperor: #555555;
+  --stratos: #001246;
+
+  --guardsman-red: #d60000;
+  --semi-black: #222;
+
+  --lochmara-blue: #0573e6;
+  --search-button-hover: #007bbdb3;
+  --azure-radiance: #0573e64c;
+
+  --boulder: #757575;
+  --mine-shaft: #2b2b2b;
+  --fallback-image-bg: #f1f1f1;
+  --label-color: #8b8b8b;
+  --gallery: #eeeeee;
+  --gallery-scrollbar: #86858575;
+  --light-grey: #595959;
+  --dark-grey: #ababab;
+  --section-name: #9e9e9e;
+  --background-grey: #f6f6f6;
+  --dark-border-color: #cccccc;
+  --headline-number-gray: #949494;
+  --card-background: #333333;
+  --hover-gray: #f7f7f7;
+  --story-summary: #707070;
+  --tag-color: #6f6f6f;
+  --tag-bgColor: #e5e5e5;
+  --dove-gray: #616161;
+  --tundora: #424242;
+  --stratos: #001246; //
+  --olivedrab: #6b8e23;
+  --key-highlight-time: #3c3c3c;
+  --orange-peel: #ff9800;
+  --navy-blue: #1a237e;
+  --dark-cyan: #004a56;
+  --kishoralo-section-yellow: #ffc107;
+  --kishoralo-section-red: #c82641;
+  --protichinta-section-cream: #fbf6de;
+  --shadow-white: #edddcb;
+  --dark-coral: #a74737;
+  --ad-bg-color: #f3f3f3;
+  --trust-red: #e50019;
+  --pattens-blue: #c8dff3;
+  --alabaster: #f9f9f9;
+
+  // placeholder color for ads and widgets: Remove this once the ads are in place
+  --placeholder: #428bca;
+
+  --facebook-btn-color: #3b5998;
+  --google-btn-color: #4285f4;
+
+  --title-color: var(--black);
+
+  --content-color: var(--greyish-brown);
+  --background-color: var(--white);
+  --meta-color: var(--gray);
+  --border-color: var(--very-light-pink);
+  --accent-color: var(--lochmara-blue);
+  --scroll-bg: var(--dark-border-color);
+}

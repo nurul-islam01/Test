@@ -9,11 +9,60 @@
       name="description"
       content="Web site created using create-react-app"
     />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo.webp" />
 
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
     <title>VENTURAS | Education IT company based in Bangladesh</title>
+    <style>
+      html {
+        font-size: 100%;
+      }
+      @font-face {
+        font-family: "Merriweather";
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: local("Merriweather Regular"), local("Merriweather-Regular"),
+          url(https://fonts.gstatic.com/s/merriweather/v21/u-440qyriQwlOrhSvowK_l5-fCZK.woff)
+            format("woff");
+      }
+      @font-face {
+        font-family: "Merriweather";
+        font-style: normal;
+        font-weight: 700;
+        font-display: swap;
+        src: local("Merriweather Bold"), local("Merriweather-Bold"),
+          url(https://fonts.gstatic.com/s/merriweather/v21/u-4n0qyriQwlOrhSvowK_l52xwNZWMf8.woff)
+            format("woff");
+      }
+      @font-face {
+        font-family: "Roboto";
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: local("Roboto"), local("Roboto-Regular"),
+          url(https://fonts.gstatic.com/s/roboto/v20/KFOmCnqEu92Fr1Mu4mxM.woff)
+            format("woff");
+      }
+      @font-face {
+        font-family: "Roboto";
+        font-style: normal;
+        font-weight: 700;
+        font-display: swap;
+        src: local("Roboto Bold"), local("Roboto-Bold"),
+          url(https://fonts.gstatic.com/s/roboto/v20/KFOlCnqEu92Fr1MmWUlfBBc-.woff)
+            format("woff");
+      }
+
+      :root {
+        --ratio: 1.112;
+        --fallback: "Roboto", "Arial", "Helvetica", "Monospace";
+        --font-1: "Roboto";
+        --font-2: "Merriweather";
+        --font-3: "Shurjo";
+      }
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

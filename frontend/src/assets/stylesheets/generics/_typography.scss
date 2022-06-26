@@ -1,0 +1,95 @@
+:root {
+  // Font sizes
+  --smallest: calc(
+    1rem / var(--ratio) / var(--ratio) / var(--ratio) / var(--ratio) /
+      var(--ratio)
+  );
+  --fs-12: calc(
+    1rem / var(--ratio) / var(--ratio) / var(--ratio) / var(--ratio)
+  );
+  --fs-13: calc(1rem / var(--ratio) / var(--ratio) / var(--ratio));
+  --fs-14_5: calc(1rem / var(--ratio) / var(--ratio));
+  --fs-16: calc(1rem / var(--ratio));
+  --fs-18: 1rem;
+  --fs-20: calc(1rem * var(--ratio));
+  --fs-22: calc(1rem * var(--ratio) * var(--ratio));
+  --fs-25: calc(1rem * var(--ratio) * var(--ratio) * var(--ratio));
+  --fs-27_5: calc(
+    1rem * var(--ratio) * var(--ratio) * var(--ratio) * var(--ratio)
+  );
+  --fs-30_5: calc(
+    1rem * var(--ratio) * var(--ratio) * var(--ratio) * var(--ratio) *
+      var(--ratio)
+  );
+  --fs-34: calc(
+    1rem * var(--ratio) * var(--ratio) * var(--ratio) * var(--ratio) *
+      var(--ratio) * var(--ratio)
+  );
+  --fs-38: calc(
+    1rem * var(--ratio) * var(--ratio) * var(--ratio) * var(--ratio) *
+      var(--ratio) * var(--ratio) * var(--ratio)
+  );
+  --fs-42: calc(
+    1rem * var(--ratio) * var(--ratio) * var(--ratio) * var(--ratio) *
+      var(--ratio) * var(--ratio) * var(--ratio) * var(--ratio)
+  );
+  --fs-47: calc(
+    1rem * var(--ratio) * var(--ratio) * var(--ratio) * var(--ratio) *
+      var(--ratio) * var(--ratio) * var(--ratio) * var(--ratio) * var(--ratio)
+  );
+  --fs-52: calc(
+    1rem * var(--ratio) * var(--ratio) * var(--ratio) * var(--ratio) *
+      var(--ratio) * var(--ratio) * var(--ratio) * var(--ratio) * var(--ratio) *
+      var(--ratio) * var(--ratio)
+  );
+  --fs-58: calc(
+    1rem * var(--ratio) * var(--ratio) * var(--ratio) * var(--ratio) *
+      var(--ratio) * var(--ratio) * var(--ratio) * var(--ratio) * var(--ratio) *
+      var(--ratio) * var(--ratio) * var(--ratio)
+  );
+
+  // Font Weights
+  --regular: 400;
+  --bold: 700;
+  --trans-duration: 0.15s;
+
+  --arial-font-family: Arial, Helvetica, Roboto, sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+body {
+  font-family: var(--font-2);
+  font-weight: var(--regular);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -moz-font-feature-settings: "liga" on;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-2);
+}
+
+p,
+li {
+  font-size: var(--fs-16);
+  line-height: 1.6;
+}
+small {
+  font-size: var(--smaller);
+  line-height: 1.6;
+}
