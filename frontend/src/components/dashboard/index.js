@@ -3,7 +3,7 @@ import { string } from "prop-types";
 
 import "./dashboard.m.scss";
 
-const Dashboard = ({ title }) => {
+const Dashboard = ({ title = "Dashboard" }) => {
   return (
     <div>
       <h1>{title}</h1>
@@ -14,3 +14,5 @@ const Dashboard = ({ title }) => {
 Dashboard.propTypes = {
   title: string,
 };
+
+export default Dashboard;
