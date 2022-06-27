@@ -1,20 +1,28 @@
 import React, { useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import Dashboard from "./components/dashboard";
+import ManagerDashboard from "./components/manager/dashboard";
 import Login from "./components/login";
+import Users from "./components/manager/users";
+
 import { LOGIN } from "./actions/constans";
 import { authReducer } from "./actions/auth";
 
 import "./App.scss";
 import authService from "./services/auth.service";
+import { get } from "lodash";
+import Manager from "./components/manager";
 
 function App() {
   const dispatch = useDispatch();
+  const user = authService.getUser();
+  const role = get(user, ["role", "name"]);
+
+  console.log("App");
 
   useEffect(() => {
-    const user = authService.getUser();
     if (!user) {
       // navigate("/login");
       return;
@@ -30,8 +38,27 @@ function App() {
           <Route
             path="/"
             exact
-            element={<Dashboard title="This is dashboard" />}
-          />
+            element={
+              user ? (
+                role === "manager" ? (
+                  <Manager title="This is Manager" />
+                ) : (
+                  <Dashboard title="This is operator dashboard" />
+                )
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          >
+            <Route
+              path="/"
+              element={<ManagerDashboard title="This is manager dashboard" />}
+            />
+            <Route
+              path="/users"
+              element={<Users title="This is user controller panel" />}
+            />
+          </Route>
           <Route
             exact
             path="/login"

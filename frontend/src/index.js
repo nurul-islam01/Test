@@ -12,22 +12,20 @@ import "./index.scss";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <App />
-      <ToastContainer
-        position="bottom-center"
-        autoClose={5000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss={true}
-        draggable={false}
-        pauseOnHover
-      />
-    </Provider>
-  </React.StrictMode>
+  <Provider store={store}>
+    <App />
+    <ToastContainer
+      position="bottom-center"
+      autoClose={5000}
+      hideProgressBar={true}
+      newestOnTop={false}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss={true}
+      draggable={false}
+      pauseOnHover
+    />
+  </Provider>
 );
 
 reportWebVitals();

@@ -30,7 +30,7 @@ const Login = ({ title }) => {
       .then((user) => {
         if (user) {
           navigate("/");
-          // window.location.reload();
+          window.location.reload();
         }
       })
       .catch((err) => {});
@@ -38,7 +38,7 @@ const Login = ({ title }) => {
 
   return (
     <div className="form-container">
-      <form autoComplete="off" className="form" onSubmit={(e) => login(e)}>
+      <form autoComplete="true" className="form" onSubmit={(e) => login(e)}>
         <div className="control">
           <h1>Sign In</h1>
         </div>
