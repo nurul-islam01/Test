@@ -1,7 +1,6 @@
 const config = require("../config/auth.config");
 const db = require("../models");
 const User = db.user;
-const Role = db.role;
 
 var jwt = require("jsonwebtoken");
 
@@ -37,7 +36,7 @@ exports.signin = (req, res) => {
             { id: user._id, email: user.email, role: user.role.name },
             config.secret,
             {
-              expiresIn: 86400,
+              expiresIn: "30d",
             }
           );
 

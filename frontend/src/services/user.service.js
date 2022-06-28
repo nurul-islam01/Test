@@ -9,6 +9,10 @@ class UserService {
     return api().get(`user/${id}`);
   }
 
+  createUser(data) {
+    return api().post("user", data);
+  }
+
   updateUser(id, data) {
     return api().patch(`user/${id}`, data);
   }

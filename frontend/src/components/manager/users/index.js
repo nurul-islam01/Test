@@ -11,14 +11,17 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import Button from "@mui/material/Button";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
+import { Button } from "@mui/material";
+import isEmail from "validator/lib/isEmail";
 
 import Icon from "../../../atoms/icon";
 
 import OptionIcon from "../../../assets/icons/options-icon.svg";
 import userService from "../../../services/user.service";
+import { useOuterClick } from "../../../hooks";
+import UserDialog from "./UserDialog";
 
 import "./users.m.scss";
 
@@ -49,14 +52,36 @@ const CONSTANT = {
 
 const Users = ({ title }) => {
   const [users, setUsers] = useState([]);
+  const [name, setName] = useState();
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+  const [role, setRole] = useState("operator");
+  const [openDialog, setOpenDialog] = useState(false);
+  const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
+
+  const innerRef = useOuterClick((ev) => {
+    if (
+      !ev.target.classList.contains("user-add-fab") ||
+      !ev.target.classList.contains("edit-menu-item")
+    ) {
+      setOpenDialog(false);
+    }
+  });
+  const innerUpRef = useOuterClick((ev) => {
+    if (!ev.target.classList.contains("edit-menu-item")) {
+      setOpenDialog(false);
+    }
+  });
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = (val, user) => {
     setAnchorEl(null);
+
     if (val === CONSTANT.DELETE) {
       toast
         .promise(userService.deleteUser(user._id), {
@@ -70,6 +95,7 @@ const Users = ({ title }) => {
           setUsers(newUsers);
         });
     } else if (val === CONSTANT.EDIT) {
+      setOpenUpdateDialog(true);
     }
   };
   useEffect(() => {
@@ -87,6 +113,60 @@ const Users = ({ title }) => {
         console.log(err);
       });
   }, []);
+
+  const onClose = () => {
+    setOpenDialog(false);
+  };
+
+  const userSubmit = (event) => {
+    event.preventDefault();
+
+    if (!isEmail(email)) {
+      toast.warn("Email is not valid");
+      return;
+    }
+
+    if (!(name && email && password && role)) {
+      const msg = `${!name ? "Name, " : ""}${!email ? "Email, " : ""}${
+        !password ? "Password, " : ""
+      }${!role ? "Role, " : ""} field is requuired.`;
+      toast.warn(msg);
+      return;
+    }
+
+    const usr = { name, email, password, role };
+    toast
+      .promise(userService.createUser(usr), {
+        error: "User create failed",
+        pending: "Creating...",
+        success: "Created",
+      })
+      .then((res) => {
+        const user = res.data.data;
+        setUsers([user, ...users]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    setOpenDialog(false);
+  };
+
+  const onName = (name) => {
+    setName(name);
+  };
+
+  const onEmail = (email) => {
+    setEmail(email);
+  };
+
+  const onPassword = (password) => {
+    setPassword(password);
+  };
+
+  const onRole = (role) => {
+    setRole(role);
+  };
 
   return (
     <div className="user-container">
@@ -136,8 +216,23 @@ const Users = ({ title }) => {
                       "aria-labelledby": "basic-button",
                     }}
                   >
-                    <MenuItem onClick={() => handleClose(CONSTANT.EDIT, row)}>
+                    <MenuItem
+                      className="edit-menu-item"
+                      onClick={() => handleClose(CONSTANT.EDIT, row)}
+                    >
                       Edit
+                      <UserDialog
+                        ref={innerUpRef}
+                        userSubmit={userSubmit}
+                        open={openUpdateDialog}
+                        onClose={onClose}
+                        onName={onName}
+                        onEmail={onEmail}
+                        onPassword={onPassword}
+                        onRole={onRole}
+                        user={row}
+                        update={true}
+                      />
                     </MenuItem>
                     <MenuItem onClick={() => handleClose(CONSTANT.DELETE, row)}>
                       Delete
@@ -149,9 +244,27 @@ const Users = ({ title }) => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Fab color="primary" aria-label="add" className="user-add-fab">
-        <AddIcon />
-      </Fab>
+      <div>
+        <Fab
+          color="primary"
+          onClick={() => setOpenDialog(true)}
+          aria-label="add"
+          className="user-add-fab"
+        >
+          <AddIcon style={{ pointerEvents: "none" }} />
+        </Fab>
+
+        <UserDialog
+          ref={innerRef}
+          userSubmit={userSubmit}
+          open={openDialog}
+          onClose={onClose}
+          onName={onName}
+          onEmail={onEmail}
+          onPassword={onPassword}
+          onRole={onRole}
+        />
+      </div>
     </div>
   );
 };

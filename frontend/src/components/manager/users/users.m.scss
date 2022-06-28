@@ -1,5 +1,23 @@
 .user-add-fab {
-  position: fixed;
+  position: absolute !important;
   bottom: 32px;
   right: 32px;
+}
+
+.user-create-upadte-dilog {
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 24px;
+
+  .MuiDialogContent-root {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+  }
+
+  .MuiFormControl-root {
+    margin-top: 5px;
+    margin-bottom: 25px;
+  }
 }

@@ -31,7 +31,7 @@ exports.createUser = (req, res) => {
         if (err) {
           return res.status(500).send({ message: err });
         }
-
+        user.role = role;
         return res.send({
           message: "User was registered successfully!",
           data: user,
