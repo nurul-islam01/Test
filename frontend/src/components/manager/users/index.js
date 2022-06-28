@@ -9,10 +9,18 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import DeleteIcon from "@mui/icons-material/Delete";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Button from "@mui/material/Button";
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
 
+import Icon from "../../../atoms/icon";
+
+import OptionIcon from "../../../assets/icons/options-icon.svg";
 import userService from "../../../services/user.service";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import "./users.m.scss";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -34,9 +42,36 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+const CONSTANT = {
+  EDIT: "EDIT",
+  DELETE: "DELETE",
+};
+
 const Users = ({ title }) => {
   const [users, setUsers] = useState([]);
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = (val, user) => {
+    setAnchorEl(null);
+    if (val === CONSTANT.DELETE) {
+      toast
+        .promise(userService.deleteUser(user._id), {
+          pending: "Deleteing...",
+          error: "Delete failed",
+          success: "Deleted.",
+        })
+        .then((res) => {
+          const index = users.indexOf(user);
+          const newUsers = users.splice(index, 1);
+          setUsers(newUsers);
+        });
+    } else if (val === CONSTANT.EDIT) {
+    }
+  };
   useEffect(() => {
     toast
       .promise(userService.getUsers(), {
@@ -47,7 +82,6 @@ const Users = ({ title }) => {
       .then((res) => {
         const data = res.data;
         setUsers(data.data);
-        console.log(data);
       })
       .catch((err) => {
         console.log(err);
@@ -69,7 +103,7 @@ const Users = ({ title }) => {
           </TableHead>
           <TableBody>
             {users.map((row, index) => (
-              <StyledTableRow key={row.name}>
+              <StyledTableRow key={index}>
                 <StyledTableCell component="th" scope="row">
                   {index + 1}
                 </StyledTableCell>
@@ -79,13 +113,45 @@ const Users = ({ title }) => {
                 <StyledTableCell align="right">{row.role.name}</StyledTableCell>
                 <StyledTableCell align="right">{row.email}</StyledTableCell>
                 <StyledTableCell align="right">
-                  <FontAwesomeIcon icon="fa-solid fa-ellipsis-vertical" />
+                  <Button
+                    aria-controls={open ? "options-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? "true" : undefined}
+                    onClick={handleClick}
+                    id="options-menu"
+                  >
+                    <Icon
+                      src={OptionIcon}
+                      alt="option icon"
+                      width={"24"}
+                      height={"24"}
+                    />
+                  </Button>
+                  <Menu
+                    id="options-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    MenuListProps={{
+                      "aria-labelledby": "basic-button",
+                    }}
+                  >
+                    <MenuItem onClick={() => handleClose(CONSTANT.EDIT, row)}>
+                      Edit
+                    </MenuItem>
+                    <MenuItem onClick={() => handleClose(CONSTANT.DELETE, row)}>
+                      Delete
+                    </MenuItem>
+                  </Menu>
                 </StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+      <Fab color="primary" aria-label="add" className="user-add-fab">
+        <AddIcon />
+      </Fab>
     </div>
   );
 };

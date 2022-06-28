@@ -10,10 +10,11 @@ import Users from "./components/manager/users";
 import { LOGIN } from "./actions/constans";
 import { authReducer } from "./actions/auth";
 
-import "./App.scss";
 import authService from "./services/auth.service";
 import { get } from "lodash";
 import Manager from "./components/manager";
+
+import "./App.scss";
 
 function App() {
   const dispatch = useDispatch();
