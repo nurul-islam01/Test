@@ -6,7 +6,8 @@ import Dashboard from "./components/dashboard";
 import ManagerDashboard from "./components/manager/dashboard";
 import Login from "./components/login";
 import Users from "./components/manager/users";
-
+import userService from "./services/user.service";
+import CreateUpdate from "./components/manager/users/Create-Update";
 import { LOGIN } from "./actions/constans";
 import { authReducer } from "./actions/auth";
 
@@ -24,11 +25,17 @@ function App() {
   console.log("App");
 
   useEffect(() => {
-    if (!user) {
-      // navigate("/login");
-      return;
-    } else {
+    if (user) {
+      userService
+        .getUser(user.id)
+        .then()
+        .catch((err) => {
+          localStorage.clear();
+          window.location.reload();
+          return;
+        });
       dispatch(authReducer({ type: LOGIN, paylod: user }));
+    } else {
     }
   }, []);
 
@@ -59,6 +66,8 @@ function App() {
               path="/users"
               element={<Users title="This is user controller panel" />}
             />
+            <Route path="/user/create" element={<CreateUpdate />} />
+            <Route path="/user/update" element={<CreateUpdate />} />
           </Route>
           <Route
             exact

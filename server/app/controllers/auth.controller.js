@@ -36,7 +36,7 @@ exports.signin = (req, res) => {
             { id: user._id, email: user.email, role: user.role.name },
             config.secret,
             {
-              expiresIn: "30d",
+              expiresIn: 84444444,
             }
           );
 

@@ -1,4 +1,3 @@
-import { string } from "prop-types";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { styled } from "@mui/material/styles";
@@ -15,14 +14,16 @@ import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
 import { Button } from "@mui/material";
 import isEmail from "validator/lib/isEmail";
+import Tooltip from "@mui/material/Tooltip";
 
 import Icon from "../../../atoms/icon";
 
-import OptionIcon from "../../../assets/icons/options-icon.svg";
+import DeleteIcon from "../../../assets/icons/trash-solid.svg";
+import EditIcon from "../../../assets/icons/user-pen-solid.svg";
 import userService from "../../../services/user.service";
-import UserDialog from "./UserDialog";
 
 import "./users.m.scss";
+import { Link } from "react-router-dom";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -46,28 +47,14 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const Users = () => {
   const [users, setUsers] = useState([]);
-  const [user, setUser] = useState();
-  const [title, setTitle] = useState("Add a user");
 
   const [openDialog, setOpenDialog] = useState(false);
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const updateUser = (user) => {
-    setUser(user);
-    setTitle("Update user");
-    setOpenDialog(true);
-    setAnchorEl(null);
-  };
-
   const deleteUser = (user) => {
-    setAnchorEl(null);
-
+    const yes = window.confirm("Are you sure");
+    if (!yes) {
+      return;
+    }
     toast
       .promise(userService.deleteUser(user._id), {
         pending: "Deleteing...",
@@ -79,10 +66,6 @@ const Users = () => {
         const newUsers = users.splice(index, 1);
         setUsers(newUsers);
       });
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
   };
 
   useEffect(() => {
@@ -100,12 +83,6 @@ const Users = () => {
         console.log(err);
       });
   }, []);
-
-  const onClose = () => {
-    setOpenDialog(false);
-    setAnchorEl(null);
-    setUser(undefined);
-  };
 
   const userSubmit = (user, id) => {
     const { name, email, password, role } = user;
@@ -128,12 +105,7 @@ const Users = () => {
           );
           setUsers(newArray);
         })
-        .catch(console.log)
-        .finally(() => {
-          setUser(undefined);
-          setTitle("");
-          setOpenDialog(false);
-        });
+        .catch(console.log);
 
       return;
     }
@@ -188,40 +160,29 @@ const Users = () => {
                 <StyledTableCell align="right">{row.role.name}</StyledTableCell>
                 <StyledTableCell align="right">{row.email}</StyledTableCell>
                 <StyledTableCell align="right">
-                  <Button
-                    aria-controls={open ? "options-menu" : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={open ? "true" : undefined}
-                    onClick={handleClick}
-                    id="options-menu"
+                  <Link
+                    to={{
+                      pathname: "/user/update",
+                      search: `user=${JSON.stringify(row)}`,
+                    }}
+                    style={{ marginRight: "12px" }}
                   >
                     <Icon
-                      src={OptionIcon}
+                      src={EditIcon}
                       alt="option icon"
                       width={"24"}
                       height={"24"}
                     />
-                  </Button>
-                  <Menu
-                    id="options-menu"
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={handleClose}
-                    MenuListProps={{
-                      "aria-labelledby": "basic-button",
+                  </Link>
+                  <Icon
+                    src={DeleteIcon}
+                    alt="option icon"
+                    width={"24"}
+                    height={"24"}
+                    onClick={() => {
+                      deleteUser(row);
                     }}
-                  >
-                    <MenuItem
-                      className="edit-menu-item"
-                      onClick={() => {
-                        updateUser(row);
-                      }}
-                    >
-                      Edit
-                    </MenuItem>
-
-                    <MenuItem onClick={() => deleteUser(row)}>Delete</MenuItem>
-                  </Menu>
+                  />
                 </StyledTableCell>
               </StyledTableRow>
             ))}
@@ -229,25 +190,14 @@ const Users = () => {
         </Table>
       </TableContainer>
       <div>
-        <Fab
-          color="primary"
-          onClick={() => setOpenDialog(true)}
-          aria-label="add"
-          className="user-add-fab"
-        >
-          <AddIcon style={{ pointerEvents: "none" }} />
-        </Fab>
+        <Link to="/user/create">
+          <Tooltip title="Create user">
+            <Fab color="primary" aria-label="add" className="user-add-fab">
+              <AddIcon />
+            </Fab>
+          </Tooltip>
+        </Link>
       </div>
-
-      {openDialog && (
-        <UserDialog
-          title={title}
-          userSubmit={userSubmit}
-          open={openDialog}
-          onClose={onClose}
-          user={user}
-        />
-      )}
     </div>
   );
 };

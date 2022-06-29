@@ -1,9 +1,9 @@
-import { string } from "prop-types";
+import { func, string } from "prop-types";
 import React from "react";
 
 import "./icon.scss";
 
-const Icon = ({ alt, src, height, width, id }) => {
+const Icon = ({ alt, src, height, width, id, onClick }) => {
   return (
     <img
       src={src}
@@ -12,6 +12,7 @@ const Icon = ({ alt, src, height, width, id }) => {
       className="svg-icon"
       width={width}
       id={id}
+      onClick={onClick}
     />
   );
 };
@@ -22,6 +23,7 @@ Icon.propTypes = {
   height: string,
   width: string,
   id: string,
+  onClick: func,
 };
 
 export default Icon;
