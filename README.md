@@ -8,5 +8,7 @@ Steps
 2. go frontend folder and open another command pallet run "npm start"
 
 # A manager account 
+
 email: nurul.islam@prothomalo.com
+
 password: 12345
