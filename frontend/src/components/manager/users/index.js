@@ -20,7 +20,6 @@ import Icon from "../../../atoms/icon";
 
 import OptionIcon from "../../../assets/icons/options-icon.svg";
 import userService from "../../../services/user.service";
-import { useOuterClick } from "../../../hooks";
 import UserDialog from "./UserDialog";
 
 import "./users.m.scss";
@@ -45,33 +44,12 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const CONSTANT = {
-  EDIT: "EDIT",
-  DELETE: "DELETE",
-};
-
-const Users = ({ title }) => {
+const Users = () => {
   const [users, setUsers] = useState([]);
-  const [name, setName] = useState();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const [role, setRole] = useState("operator");
-  const [openDialog, setOpenDialog] = useState(false);
-  const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
+  const [user, setUser] = useState();
+  const [title, setTitle] = useState("Add a user");
 
-  const innerRef = useOuterClick((ev) => {
-    if (
-      !ev.target.classList.contains("user-add-fab") ||
-      !ev.target.classList.contains("edit-menu-item")
-    ) {
-      setOpenDialog(false);
-    }
-  });
-  const innerUpRef = useOuterClick((ev) => {
-    if (!ev.target.classList.contains("edit-menu-item")) {
-      setOpenDialog(false);
-    }
-  });
+  const [openDialog, setOpenDialog] = useState(false);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -79,25 +57,34 @@ const Users = ({ title }) => {
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = (val, user) => {
+
+  const updateUser = (user) => {
+    setUser(user);
+    setTitle("Update user");
+    setOpenDialog(true);
+    setAnchorEl(null);
+  };
+
+  const deleteUser = (user) => {
     setAnchorEl(null);
 
-    if (val === CONSTANT.DELETE) {
-      toast
-        .promise(userService.deleteUser(user._id), {
-          pending: "Deleteing...",
-          error: "Delete failed",
-          success: "Deleted.",
-        })
-        .then((res) => {
-          const index = users.indexOf(user);
-          const newUsers = users.splice(index, 1);
-          setUsers(newUsers);
-        });
-    } else if (val === CONSTANT.EDIT) {
-      setOpenUpdateDialog(true);
-    }
+    toast
+      .promise(userService.deleteUser(user._id), {
+        pending: "Deleteing...",
+        error: "Delete failed",
+        success: "Deleted.",
+      })
+      .then((res) => {
+        const index = users.indexOf(user);
+        const newUsers = users.splice(index, 1);
+        setUsers(newUsers);
+      });
   };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   useEffect(() => {
     toast
       .promise(userService.getUsers(), {
@@ -116,13 +103,38 @@ const Users = ({ title }) => {
 
   const onClose = () => {
     setOpenDialog(false);
+    setAnchorEl(null);
+    setUser(undefined);
   };
 
-  const userSubmit = (event) => {
-    event.preventDefault();
+  const userSubmit = (user, id) => {
+    const { name, email, password, role } = user;
 
     if (!isEmail(email)) {
       toast.warn("Email is not valid");
+      return;
+    }
+
+    if (id) {
+      toast
+        .promise(userService.updateUser(id, user), {
+          error: "Update failed",
+          pending: "Updating...",
+          success: "Updated",
+        })
+        .then((res) => {
+          const newArray = users.map((item) =>
+            item._id === id ? res.data.data : item
+          );
+          setUsers(newArray);
+        })
+        .catch(console.log)
+        .finally(() => {
+          setUser(undefined);
+          setTitle("");
+          setOpenDialog(false);
+        });
+
       return;
     }
 
@@ -133,39 +145,22 @@ const Users = ({ title }) => {
       toast.warn(msg);
       return;
     }
-
-    const usr = { name, email, password, role };
     toast
-      .promise(userService.createUser(usr), {
+      .promise(userService.createUser(user), {
         error: "User create failed",
         pending: "Creating...",
         success: "Created",
       })
       .then((res) => {
-        const user = res.data.data;
-        setUsers([user, ...users]);
+        const updated = res.data.data;
+        setUsers([...users, updated]);
       })
       .catch((err) => {
         console.log(err);
+      })
+      .finally(() => {
+        setOpenDialog(false);
       });
-
-    setOpenDialog(false);
-  };
-
-  const onName = (name) => {
-    setName(name);
-  };
-
-  const onEmail = (email) => {
-    setEmail(email);
-  };
-
-  const onPassword = (password) => {
-    setPassword(password);
-  };
-
-  const onRole = (role) => {
-    setRole(role);
   };
 
   return (
@@ -218,25 +213,14 @@ const Users = ({ title }) => {
                   >
                     <MenuItem
                       className="edit-menu-item"
-                      onClick={() => handleClose(CONSTANT.EDIT, row)}
+                      onClick={() => {
+                        updateUser(row);
+                      }}
                     >
                       Edit
-                      <UserDialog
-                        ref={innerUpRef}
-                        userSubmit={userSubmit}
-                        open={openUpdateDialog}
-                        onClose={onClose}
-                        onName={onName}
-                        onEmail={onEmail}
-                        onPassword={onPassword}
-                        onRole={onRole}
-                        user={row}
-                        update={true}
-                      />
                     </MenuItem>
-                    <MenuItem onClick={() => handleClose(CONSTANT.DELETE, row)}>
-                      Delete
-                    </MenuItem>
+
+                    <MenuItem onClick={() => deleteUser(row)}>Delete</MenuItem>
                   </Menu>
                 </StyledTableCell>
               </StyledTableRow>
@@ -253,24 +237,19 @@ const Users = ({ title }) => {
         >
           <AddIcon style={{ pointerEvents: "none" }} />
         </Fab>
+      </div>
 
+      {openDialog && (
         <UserDialog
-          ref={innerRef}
+          title={title}
           userSubmit={userSubmit}
           open={openDialog}
           onClose={onClose}
-          onName={onName}
-          onEmail={onEmail}
-          onPassword={onPassword}
-          onRole={onRole}
+          user={user}
         />
-      </div>
+      )}
     </div>
   );
-};
-
-Users.propTypes = {
-  title: string,
 };
 
 export default Users;
