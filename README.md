@@ -9,5 +9,4 @@ Steps
 
 # A manager account 
 email: nurul.islam@prothomalo.com
-
-\npassword: 12345
+password: 12345
